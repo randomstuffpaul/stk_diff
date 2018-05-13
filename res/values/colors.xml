@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ltgrey">#ffe0e0e0</color>
+    <color name="bright_foreground_dark">#ffffffff</color>
+    <color name="title_sub_header">#ff3d7b8a</color>
+    <color name="menu_item">#ff000000</color>
+</resources>

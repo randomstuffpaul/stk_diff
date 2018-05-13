@@ -1,0 +1,64 @@
+Signature-Version: 1.0
+Created-By: 1.0 (Android SignApk)
+SHA1-Digest-Manifest: dMyWPu1qiyLKbd1ifXUVd6ZzA5s=
+
+Name: SEC-INF/buildinfo.xml
+SHA1-Digest: BPTxWdjlluvdBOBrG431a13sp/A=
+
+Name: SEC-INF/buildConfirm.crt
+SHA1-Digest: ir36zvd3F1FnMg/xKS909hQVlS8=
+
+Name: res/drawable/ic_launcher_sim_toolkit_cu.qmg
+SHA1-Digest: WpboXgtOvj/7fkp5b/gxjXPqhoY=
+
+Name: res/drawable/ic_launcher_sim_toolkit.qmg
+SHA1-Digest: /Y72o7wqarqOL3G/+lxF8PvbzvY=
+
+Name: res/layout/stk_event_msg.xml
+SHA1-Digest: +eA06vNRQW8ZiF6yRPwJ+TnI27s=
+
+Name: resources.arsc
+SHA1-Digest: OhrBmqyKF99xNzOhuZdFyNY4ac8=
+
+Name: res/layout/stk_title.xml
+SHA1-Digest: dSq52hBj3f5HKt3j4+VUGD/2rT4=
+
+Name: res/xml/stk_settings.xml
+SHA1-Digest: vEYDNa34+aeT4Tz4nI4EvYgyh8A=
+
+Name: res/drawable-xxhdpi-v4/ic_launcher_sim_toolkit.qmg
+SHA1-Digest: PfnOMogSVTfW+Vk041kPVBSjiG8=
+
+Name: AndroidManifest.xml
+SHA1-Digest: ne0d8TzhHel6ZQFmu2ecnj0MpSQ=
+
+Name: res/drawable/logo_cu.qmg
+SHA1-Digest: Zlnxd35wEMvy9WREHnyl9Wi6n4o=
+
+Name: res/layout/stk_input.xml
+SHA1-Digest: sxLr/wzS6zFz/SA9zfcCQ5T0EU8=
+
+Name: res/layout/stk_tone_dialog.xml
+SHA1-Digest: yAaKQj+9sV3JXsNjs3d8NUTKWnQ=
+
+Name: res/drawable-xxhdpi-v4/logo.qmg
+SHA1-Digest: UcjpZuvUUic95B7Syfa4od5knXY=
+
+Name: res/drawable-xxhdpi-v4/ic_launcher_sim_toolkit_cu.qmg
+SHA1-Digest: ywotUG5yxRttMn19D0Bd86u2R9Q=
+
+Name: res/layout/stk_menu_list.xml
+SHA1-Digest: CePNJ7FY5pXVS3M45cAIGXPcp88=
+
+Name: res/drawable-xxhdpi-v4/logo_cu.qmg
+SHA1-Digest: Z30959zs9RMw6j2viHlhk85BJjc=
+
+Name: res/layout/stk_menu_item.xml
+SHA1-Digest: kOaUxY8M3ckrCjDUjF2m9XOjnoY=
+
+Name: res/drawable/logo.qmg
+SHA1-Digest: LyiqOc2zLJ5P5rPi6ScQ9k0CxpU=
+
+Name: res/layout/stk_msg_dialog.xml
+SHA1-Digest: KkZkEfRl0iNNdgp4WLohr9I8Upk=
+

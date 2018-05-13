@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content"
+    <LinearLayout android:orientation="vertical" android:id="@id/messagePanel" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1.0">
+        <ScrollView android:id="@id/scrollView" android:paddingLeft="14dp" android:paddingTop="2dp" android:paddingRight="10dp" android:paddingBottom="12dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <TextView android:id="@id/dialog_message" android:padding="5dp" android:layout_width="match_parent" android:layout_height="wrap_content" style="?unknown_attr_ref: 1010041" />
+        </ScrollView>
+    </LinearLayout>
+    <LinearLayout android:orientation="vertical" android:id="@id/buttonPanel" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="54dp"
+        <LinearLayout android:orientation="horizontal" android:background="@color/ltgrey" android:paddingLeft="2dp" android:paddingTop="4dp" android:paddingRight="2dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <Button android:layout_gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end" android:id="@id/button_cancel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/button_cancel" android:maxLines="2" android:layout_weight="1.0" />
+            <Button android:layout_gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end" android:id="@id/button_ok" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/button_ok" android:maxLines="2" android:layout_weight="1.0" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

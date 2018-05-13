@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="ic_launcher_sim_toolkit">res/drawable/ic_launcher_sim_toolkit.qmg</drawable>
+    <drawable name="ic_launcher_sim_toolkit">res/drawable-xxhdpi-v4/ic_launcher_sim_toolkit.qmg</drawable>
+    <drawable name="ic_launcher_sim_toolkit_cu">res/drawable/ic_launcher_sim_toolkit_cu.qmg</drawable>
+    <drawable name="ic_launcher_sim_toolkit_cu">res/drawable-xxhdpi-v4/ic_launcher_sim_toolkit_cu.qmg</drawable>
+    <drawable name="logo">res/drawable/logo.qmg</drawable>
+    <drawable name="logo">res/drawable-xxhdpi-v4/logo.qmg</drawable>
+    <drawable name="logo_cu">res/drawable/logo_cu.qmg</drawable>
+    <drawable name="logo_cu">res/drawable-xxhdpi-v4/logo_cu.qmg</drawable>
+</resources>

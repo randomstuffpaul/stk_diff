@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:fitsSystemWindows="true" android:layout_width="match_parent" android:layout_height="match_parent"
+    <LinearLayout android:orientation="horizontal" android:id="@id/stk_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="48dp" android:layout_centerVertical="true" style="?unknown_attr_ref: 101005c"
+        <LinearLayout android:orientation="horizontal" android:id="@id/left_container" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_weight="1.0" android:layout_centerVertical="true">
+            <ImageView android:layout_gravity="top|bottom|center_vertical|fill_vertical|center|fill" android:id="@id/title_icon" android:layout_width="UNKNOWN_DATA_0x1001" android:layout_height="match_parent" android:layout_marginLeft="2dp" android:layout_marginRight="9dp" android:scaleType="fitCenter" android:layout_alignParentLeft="true" />
+            <TextView android:textSize="15sp" android:textColor="@color/title_sub_header" android:gravity="top|bottom|center_vertical|fill_vertical|center|fill" android:id="@id/title_text" android:paddingLeft="16dp" android:layout_width="match_parent" android:layout_height="match_parent" android:fontFamily="Roboto_Regular" />
+        </LinearLayout>
+        <LinearLayout android:id="@id/right_container" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_alignParentRight="true" android:layout_centerVertical="true">
+            <ProgressBar android:id="@id/progress_bar" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="match_parent" android:layout_marginLeft="5dp" android:max="10000" android:layout_centerVertical="true" style="?unknown_attr_ref: 101020f" />
+        </LinearLayout>
+    </LinearLayout>
+    <FrameLayout android:id="0x1020002" android:layout_width="match_parent" android:layout_height="UNKNOWN_DATA_0x1" android:foreground="?unknown_attr_ref: 1010059" android:layout_weight="1.0" android:foregroundGravity="top|bottom|left|right|center_vertical|fill_vertical|center_horizontal|fill_horizontal|center|fill" />
+</LinearLayout>

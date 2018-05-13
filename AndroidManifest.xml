@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/prv/res/android" androidprv:sharedUserId="android.uid.phone" androidprv:versionCode="21" androidprv:versionName="5.0-N9002ZNSGQA1" package="com.android.stk" platformBuildVersionCode="21" platformBuildVersionName="5.0-N9002ZNSGQA1">
+    <uses-sdk androidprv:minSdkVersion="21" androidprv:targetSdkVersion="21" />
+    <original-package androidprv:name="com.android.stk" />
+    <permission androidprv:label="STKEVENT PERMISSION" androidprv:name="com.sec.android.stk.permission.EVENT" androidprv:protectionLevel="dangerous|signature|signatureOrSystem" />
+    <uses-permission androidprv:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission androidprv:name="android.permission.GET_TASKS" />
+    <uses-permission androidprv:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission androidprv:name="com.sec.android.app.browser.permission.HOMEPAGE" />
+    <uses-permission androidprv:name="android.permission.RECEIVE_STK_COMMANDS" />
+    <application androidprv:label="@string/app_name" androidprv:icon="@drawable/ic_launcher_sim_toolkit" androidprv:process="com.android.phone" androidprv:clearTaskOnLaunch="true">
+        <activity androidprv:theme="@*androidprv:style/Theme.NoDisplay" androidprv:label="@string/app_name" androidprv:name="StkLauncherActivity" androidprv:enabled="false">
+            <intent-filter>
+                <action androidprv:name="android.intent.action.MAIN" />
+                <category androidprv:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity androidprv:theme="@style/SktMenuTheme" androidprv:name="StkMenuActivity" androidprv:exported="false" androidprv:excludeFromRecents="true" androidprv:launchMode="singleTop" androidprv:configChanges="mcc|mnc|keyboard|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
+            <intent-filter>
+                <action androidprv:name="android.intent.action.VIEW" />
+                <action androidprv:name="android.intent.action.PICK" />
+                <category androidprv:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity androidprv:theme="@style/SktMenuTheme" androidprv:name="StkInputActivity" androidprv:exported="false" androidprv:excludeFromRecents="true" androidprv:configChanges="mcc|mnc|keyboard|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+        <activity androidprv:theme="@*androidprv:style/Theme.NoDisplay" androidprv:name="StkDialogActivity" androidprv:configChanges="mcc|mnc|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+        <activity androidprv:theme="@*androidprv:style/Theme.Dialog" androidprv:name="ToneDialog" androidprv:configChanges="mcc|mnc|keyboard|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+        <receiver androidprv:name="com.android.stk.StkCmdReceiver" androidprv:exported="false">
+            <intent-filter>
+                <action androidprv:name="android.intent.action.stk.command" />
+                <action androidprv:name="android.intent.action.stk.session_end" />
+                <action androidprv:name="android.intent.action.stk.start_main_activity" />
+                <action androidprv:name="android.intent.action.stk.idle_screen" />
+                <action androidprv:name="android.intent.action.stk.icc_status_change" />
+                <action androidprv:name="android.intent.action.stk.user_action" />
+                <action androidprv:name="android.intent.action.LOCALE_CHANGED" />
+                <action androidprv:name="android.intent.action.SILENT_RESETBY_DUALMODE" />
+                <action androidprv:name="android.intent.action.ACTION_SHUTDOWN" />
+                <action androidprv:name="android.settings.SIMCARD_MGT_ACTIVATED" />
+                <action androidprv:name="android.intent.action.AIRPLANE_MODE" />
+            </intent-filter>
+        </receiver>
+        <receiver androidprv:name="com.android.stk.StkCmdReceiver" androidprv:permission="com.sec.android.stk.permission.EVENT">
+            <intent-filter>
+                <action androidprv:name="android.intent.action.stk.event" />
+                <action androidprv:name="android.intent.action.STK_BROWSER_HOMEPAGE" />
+                <action androidprv:name="com.sec.android.intent.action.HOME_RESUME" />
+            </intent-filter>
+        </receiver>
+        <receiver androidprv:name="com.android.stk.BootCompletedReceiver">
+            <intent-filter>
+                <action androidprv:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service androidprv:name="StkAppService" />
+    </application>
+</manifest>

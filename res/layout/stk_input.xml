@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:layout_gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end" android:orientation="vertical" android:padding="20dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <TextView android:textStyle="bold" android:gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end" android:id="@id/prompt" android:paddingBottom="30dp" android:layout_width="match_parent" android:layout_height="wrap_content" />
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            <LinearLayout android:orientation="vertical" android:id="@id/normal_layout" android:visibility="visible" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+                <LinearLayout android:orientation="horizontal" android:id="@id/input_restriction_info" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="4dp">
+                    <TextView android:textColor="@color/ltgrey" android:gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end" android:id="@id/input_type" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+                    <TextView android:textColor="@color/ltgrey" android:id="@id/num_of_chars" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="4dp" />
+                </LinearLayout>
+                <EditText android:layout_gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end" android:id="@id/in_text" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="20dp" />
+                <Button android:textStyle="bold" android:layout_gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end" android:id="@id/button_ok" android:layout_width="UNKNOWN_DATA_0x6402" android:layout_height="wrap_content" android:text="@string/button_ok" />
+            </LinearLayout>
+            <LinearLayout android:gravity="left|right|center_horizontal|fill_horizontal|center|fill|start|end" android:id="@id/yes_no_layout" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content">
+                <Button android:textStyle="bold" android:id="@id/button_yes" android:layout_width="UNKNOWN_DATA_0x6402" android:layout_height="wrap_content" android:text="@string/button_yes" />
+                <Button android:textStyle="bold" android:id="@id/button_no" android:layout_width="UNKNOWN_DATA_0x6402" android:layout_height="wrap_content" android:layout_marginLeft="10dp" android:text="@string/button_no" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
