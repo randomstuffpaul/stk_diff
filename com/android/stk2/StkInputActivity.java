@@ -1,4 +1,4 @@
-package com.android.stk;
+package com.android.stk2;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -38,14 +38,14 @@ public class StkInputActivity extends Activity implements TextWatcher, OnClickLi
     private TextView mPromptView = null;
     boolean mSentTerminalResponse;
     private int mState;
-    private final BroadcastReceiver mStateReceiver = new C00082();
+    private final BroadcastReceiver mStateReceiver = new C00062();
     private Input mStkInput = null;
     private EditText mTextIn = null;
-    Handler mTimeoutHandler = new C00071();
+    Handler mTimeoutHandler = new C00051();
     private View mYesNoLayout = null;
 
-    class C00071 extends Handler {
-        C00071() {
+    class C00051 extends Handler {
+        C00051() {
         }
 
         public void handleMessage(Message msg) {
@@ -55,7 +55,7 @@ public class StkInputActivity extends Activity implements TextWatcher, OnClickLi
                     StkInputActivity.this.finish();
                     return;
                 case 2:
-                    CatLog.d(this, "MSG_ID_PAUSE_TIMEOUT!!!!! ");
+                    CatLog.d("SIM2", this, "MSG_ID_PAUSE_TIMEOUT!!!!! ");
                     StkInputActivity.this.mPauseRelease = false;
                     return;
                 default:
@@ -64,15 +64,15 @@ public class StkInputActivity extends Activity implements TextWatcher, OnClickLi
         }
     }
 
-    class C00082 extends BroadcastReceiver {
-        C00082() {
+    class C00062 extends BroadcastReceiver {
+        C00062() {
         }
 
         public void onReceive(Context context, Intent intent) {
             String inputString;
             int button;
             if (intent.getAction().equals("com.android.samsungtest.EVENTHANDLE_TEXTANDBUTTON")) {
-                CatLog.d(this, "got intent");
+                CatLog.d("SIM2", this, "got intent");
                 inputString = intent.getStringExtra("Value");
                 button = intent.getIntExtra("Button", -1);
                 if (inputString != null) {
@@ -88,7 +88,7 @@ public class StkInputActivity extends Activity implements TextWatcher, OnClickLi
                 }
             } else if (intent.getAction().equals("com.android.samsungtest.EVENTHANDLE_BUTTON")) {
                 inputString = "";
-                CatLog.d(this, "got intent");
+                CatLog.d("SIM2", this, "got intent");
                 button = intent.getIntExtra("Button", -1);
                 if (button == 0) {
                     StkInputActivity.this.sendResponse(21, null, false);
@@ -104,7 +104,7 @@ public class StkInputActivity extends Activity implements TextWatcher, OnClickLi
                 }
             } else if ("android.intent.action.AIRPLANE_MODE".equals(intent.getAction())) {
                 int airPlaneEnabled = System.getInt(StkInputActivity.this.mContext.getContentResolver(), "airplane_mode_on", 0);
-                CatLog.d(this, "Received  ACTION_AIRPLANE_MODE_CHANGED = " + airPlaneEnabled);
+                CatLog.d("SIM2", this, "Received  ACTION_AIRPLANE_MODE_CHANGED = " + airPlaneEnabled);
                 if (airPlaneEnabled == 1) {
                     StkInputActivity.this.finish();
                 }
@@ -182,31 +182,31 @@ public class StkInputActivity extends Activity implements TextWatcher, OnClickLi
 
     public void onResume() {
         super.onResume();
-        CatLog.d(this, "onResume startTimeOut");
+        CatLog.d("SIM2", this, "onResume startTimeOut");
         startTimeOut();
     }
 
     public void onPause() {
         super.onPause();
-        CatLog.d(this, "onPause finish activity");
+        CatLog.d("SIM2", this, "onPause finish activity");
         if (!"China".equals(SystemProperties.get("ro.csc.country_code"))) {
             cancelTimeOut();
         }
     }
 
     public void onConfigurationChanged(Configuration newConfig) {
-        CatLog.d(this, "onConfigurationChanged");
+        CatLog.d("SIM2", this, "onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
     }
 
     public void onStop() {
         super.onStop();
-        CatLog.d(this, "onStop");
+        CatLog.d("SIM2", this, "onStop");
         if (!this.mPauseRelease || this.mSentTerminalResponse) {
             this.appService.lock.lock();
             try {
                 if (this.appService.mWakeLock.isHeld()) {
-                    CatLog.d(this, "before release wakeup");
+                    CatLog.d("SIM2", this, "before release wakeup");
                     this.appService.mWakeLock.release();
                 }
                 this.appService.lock.unlock();
@@ -219,10 +219,7 @@ public class StkInputActivity extends Activity implements TextWatcher, OnClickLi
 
     public void onDestroy() {
         super.onDestroy();
-        if ("China".equals(SystemProperties.get("ro.csc.country_code"))) {
-            cancelTimeOut();
-        }
-        CatLog.d(this, "onDestroy activity");
+        CatLog.d("SIM2", this, "onDestroy activity");
         if (!this.mPauseRelease || this.mSentTerminalResponse) {
             if (!this.mSentTerminalResponse) {
                 sendResponse(22);

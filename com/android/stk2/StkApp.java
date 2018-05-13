@@ -1,4 +1,4 @@
-package com.android.stk;
+package com.android.stk2;
 
 import android.app.Application;
 import com.android.internal.telephony.cat.Duration;

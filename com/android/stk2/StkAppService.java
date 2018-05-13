@@ -1,4 +1,4 @@
-package com.android.stk;
+package com.android.stk2;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
@@ -25,7 +25,6 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.RemoteException;
 import android.os.SystemProperties;
-import android.os.UserHandle;
 import android.provider.Settings.System;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +46,6 @@ import com.android.internal.telephony.cat.LaunchBrowserMode;
 import com.android.internal.telephony.cat.Menu;
 import com.android.internal.telephony.cat.ResultCode;
 import com.android.internal.telephony.cat.TextMessage;
-import com.android.internal.telephony.uicc.IccRefreshResponse;
 import com.samsung.android.multiwindow.MultiWindowStyle;
 import com.samsung.android.telephony.MultiSimManager;
 import com.sec.android.app.CscFeature;
@@ -230,30 +228,6 @@ public class StkAppService extends Service implements Runnable {
     }
 
     private final class ServiceHandler extends Handler {
-
-        class C00041 implements Runnable {
-
-            class C00031 implements Runnable {
-                C00031() {
-                }
-
-                public void run() {
-                    Intent rebootIntent = new Intent("android.intent.action.ACTION_REQUEST_SHUTDOWN");
-                    rebootIntent.setAction("android.intent.action.REBOOT");
-                    rebootIntent.putExtra("android.intent.extra.KEY_CONFIRM", false);
-                    rebootIntent.setFlags(268435456);
-                    StkAppService.this.mContext.startActivityAsUser(rebootIntent, UserHandle.CURRENT);
-                }
-            }
-
-            C00041() {
-            }
-
-            public void run() {
-                new Thread(new C00031()).start();
-            }
-        }
-
         private ServiceHandler() {
         }
 
@@ -340,8 +314,8 @@ public class StkAppService extends Service implements Runnable {
                     return;
                 case 100:
                     if (((Bundle) msg.obj).getInt("simcard_sim_activate") == 1) {
-                        int mSimActive = System.getInt(StkAppService.this.mContext.getContentResolver(), "phone1_on", 1);
-                        CatLog.d(this, "Install App by user activation. mSimActive=" + mSimActive + " mMainCmd=" + StkAppService.this.mMainCmd);
+                        int mSimActive = System.getInt(StkAppService.this.mContext.getContentResolver(), "phone2_on", 1);
+                        CatLog.d(this, "[STK2]Install App by user activation. mSimActive=" + mSimActive + " mMainCmd=" + StkAppService.this.mMainCmd);
                         if (StkAppService.this.mMainCmd != null && 1 == mSimActive) {
                             StkAppInstaller.install(StkAppService.this.mContext);
                             return;
@@ -354,7 +328,7 @@ public class StkAppService extends Service implements Runnable {
                         StkAppService.this.mCmdInProgress = true;
                         StkAppService.this.handleSessionEnd();
                     }
-                    CatLog.d(this, "Uninstall App by user deactivation");
+                    CatLog.d(this, "[STK2]Uninstall App by user deactivation");
                     StkAppInstaller.unInstall(StkAppService.this.mContext);
                     return;
                 default:
@@ -363,23 +337,11 @@ public class StkAppService extends Service implements Runnable {
         }
 
         private void handleCardStatusChangeAndIccRefresh(Bundle args) {
-            if ("CTC".equals(SystemProperties.get("ro.csc.sales_code", ""))) {
-                IccRefreshResponse state = new IccRefreshResponse();
-                state.refreshResult = args.getInt("refresh_result");
-                CatLog.d(this, "Icc Refresh Result: " + state.refreshResult);
-                if (state.refreshResult == 2) {
-                    StkAppService.this.mMessageHandler.postDelayed(new C00041(), 5000);
-                }
-            }
         }
     }
 
     public void onCreate() {
-        if ("DCG".equals("DGG") || "DCGG".equals("DGG") || "DCGS".equals("DGG") || "DCGGS".equals("DGG") || "CG".equals("DGG")) {
-            this.mStkService = CatService.getInstance(1);
-        } else {
-            this.mStkService = CatService.getInstance();
-        }
+        this.mStkService = CatService.getInstance(1);
         this.mCmdsQ = new LinkedList();
         Thread serviceThread = new Thread(null, this, "Stk App Service");
         this.salesCode = SystemProperties.get("ro.csc.sales_code");
@@ -399,11 +361,7 @@ public class StkAppService extends Service implements Runnable {
     public void onStart(Intent intent, int startId) {
         CatLog.d(this, "onStart)");
         waitForLooper();
-        if ("DCG".equals("DGG") || "DCGG".equals("DGG") || "DCGS".equals("DGG") || "DCGGS".equals("DGG") || "CG".equals("DGG")) {
-            this.mStkService = CatService.getInstance(1);
-        } else {
-            this.mStkService = CatService.getInstance();
-        }
+        this.mStkService = CatService.getInstance(1);
         if (intent != null) {
             Bundle args = intent.getExtras();
             if (args != null) {
@@ -529,13 +487,13 @@ public class StkAppService extends Service implements Runnable {
                 case 4:
                     CatLog.d(this, "send user activity event to RIL");
                     this.mStkService.onEventDownload(new CatEnvelopeMessage(4, 130, 129, null));
-                    MultiSimManager.setTelephonyProperty("gsm.sim.userEvent", 0, "0");
+                    MultiSimManager.setTelephonyProperty("gsm.sim.userEvent", 1, "0");
                     this.mSetEventList[event.getEvent()] = false;
                     return;
                 case 5:
                     CatLog.d(this, "send Idle screen event to RIL");
                     this.mStkService.onEventDownload(new CatEnvelopeMessage(5, 2, 129, null));
-                    MultiSimManager.setTelephonyProperty("gsm.sim.screenEvent", 0, "0");
+                    MultiSimManager.setTelephonyProperty("gsm.sim.screenEvent", 1, "0");
                     this.mSetEventList[event.getEvent()] = false;
                     return;
                 case 7:
@@ -601,11 +559,7 @@ public class StkAppService extends Service implements Runnable {
             Bundle args;
             ResultCode resCode;
             if (this.mStkService == null) {
-                if ("DCG".equals("DGG") || "DCGG".equals("DGG") || "DCGS".equals("DGG") || "DCGGS".equals("DGG") || "CG".equals("DGG")) {
-                    this.mStkService = CatService.getInstance(1);
-                } else {
-                    this.mStkService = CatService.getInstance();
-                }
+                this.mStkService = CatService.getInstance(1);
                 if (this.mStkService == null) {
                     args = new Bundle();
                     args.putInt("op", 2);
@@ -638,11 +592,7 @@ public class StkAppService extends Service implements Runnable {
                 case 6:
                     this.mMainCmd = this.mCurrentCmd;
                     this.mCurrentMenu = cmdMsg.getMenu();
-                    if ("DCG".equals("DGG") || "DCGG".equals("DGG") || "DCGS".equals("DGG") || "DCGGS".equals("DGG") || "CG".equals("DGG")) {
-                        this.mStkService = CatService.getInstance(1);
-                    } else {
-                        this.mStkService = CatService.getInstance();
-                    }
+                    this.mStkService = CatService.getInstance(1);
                     if (removeMenu()) {
                         CatLog.d(this, "Uninstall App");
                         this.mCurrentMenu = null;
@@ -650,8 +600,8 @@ public class StkAppService extends Service implements Runnable {
                     } else {
                         CatLog.d(this, "Install App");
                         if ("CHU".equals(this.salesCode)) {
-                            int mSimActive = System.getInt(this.mContext.getContentResolver(), "phone1_on", 1);
-                            CatLog.d(this, "[STK]DB in Settings, mSimActive=" + mSimActive);
+                            int mSimActive = System.getInt(this.mContext.getContentResolver(), "phone2_on", 1);
+                            CatLog.d(this, "[STK2]DB in Settings, mSimActive=" + mSimActive);
                             if (this.mMainCmd != null && 1 == mSimActive) {
                                 StkAppInstaller.install(this.mContext);
                             }
@@ -670,7 +620,6 @@ public class StkAppService extends Service implements Runnable {
                         this.mStkService.sentTerminalResponseForSetupMenu(true);
                         break;
                     }
-                    break;
                 case 7:
                     waitForUsersResponse = false;
                     if (CscFeature.getInstance().getEnableStatus("CscFeature_RIL_RemoveToastDuringStkRefresh")) {
@@ -802,7 +751,7 @@ public class StkAppService extends Service implements Runnable {
         RunningTaskInfo runInfo = (RunningTaskInfo) runningTaskInfo.get(0);
         CatLog.d(this, "Getting first Running task info");
         CatLog.d(this, "Value of package name" + runInfo.topActivity.getPackageName());
-        if (!runInfo.topActivity.getPackageName().equals(homeInfo.activityInfo.packageName) && !runInfo.topActivity.getPackageName().equals("com.android.stk")) {
+        if (!runInfo.topActivity.getPackageName().equals(homeInfo.activityInfo.packageName) && !runInfo.topActivity.getPackageName().equals("com.android.stk2")) {
             return false;
         }
         CatLog.d(this, "Package Name matches");
@@ -842,18 +791,15 @@ public class StkAppService extends Service implements Runnable {
         if (runningTaskInfo == null) {
             CatLog.d(this, "runningTaskInfo == null");
             return false;
-        } else if (runningTaskInfo.isEmpty()) {
-            return false;
-        } else {
-            RunningTaskInfo runInfo = (RunningTaskInfo) runningTaskInfo.get(0);
-            CatLog.d(this, "Getting first Running task info");
-            CatLog.d(this, "Value of class name : " + runInfo.topActivity.getClassName());
-            if (!runInfo.topActivity.getClassName().equals("com.android.stk.StkMenuActivity")) {
-                return false;
-            }
-            CatLog.d(this, "Class Name matches");
-            return true;
         }
+        RunningTaskInfo runInfo = (RunningTaskInfo) runningTaskInfo.get(0);
+        CatLog.d(this, "Getting first Running task info");
+        CatLog.d(this, "Value of class name : " + runInfo.topActivity.getClassName());
+        if (!runInfo.topActivity.getClassName().equals("com.android.stk2.StkMenuActivity")) {
+            return false;
+        }
+        CatLog.d(this, "Class Name matches");
+        return true;
     }
 
     private void handleCmdResponse(Bundle args) {
@@ -953,6 +899,7 @@ public class StkAppService extends Service implements Runnable {
                         resMsg.setResultCode(ResultCode.NO_RESPONSE_FROM_USER);
                         break;
                     }
+                    break;
                 case 21:
                     CatLog.d(this, "RES_ID_BACKWARD");
                     resMsg.setResultCode(ResultCode.BACKWARD_MOVE_BY_USER);
@@ -977,11 +924,7 @@ public class StkAppService extends Service implements Runnable {
                     return;
             }
             if (this.mStkService == null) {
-                if ("DCG".equals("DGG") || "DCGG".equals("DGG") || "DCGS".equals("DGG") || "DCGGS".equals("DGG") || "CG".equals("DGG")) {
-                    this.mStkService = CatService.getInstance(1);
-                } else {
-                    this.mStkService = CatService.getInstance();
-                }
+                this.mStkService = CatService.getInstance(1);
             }
             if (this.mStkService != null) {
                 this.mStkService.onCmdResponse(resMsg);
@@ -996,7 +939,7 @@ public class StkAppService extends Service implements Runnable {
     private void launchMenuActivity(Menu menu) {
         int intentFlags;
         Intent newIntent = new Intent("android.intent.action.VIEW");
-        newIntent.setClassName("com.android.stk", "com.android.stk.StkMenuActivity");
+        newIntent.setClassName("com.android.stk2", "com.android.stk2.StkMenuActivity");
         if (menu == null) {
             intentFlags = 335544320 | getFlagActivityNoUserAction(InitiatedByUserAction.yes);
             newIntent.putExtra("STATE", 1);
@@ -1010,7 +953,7 @@ public class StkAppService extends Service implements Runnable {
 
     private void distroyMenuActivity() {
         Intent newIntent = new Intent("android.intent.action.VIEW");
-        newIntent.setClassName("com.android.stk", "com.android.stk.StkMenuActivity");
+        newIntent.setClassName("com.android.stk2", "com.android.stk2.StkMenuActivity");
         int intentFlags = 335544320 | getFlagActivityNoUserAction(InitiatedByUserAction.unknown);
         newIntent.putExtra("STATE", 3);
         newIntent.setFlags(intentFlags);
@@ -1020,7 +963,7 @@ public class StkAppService extends Service implements Runnable {
     private void launchInputActivity() {
         Intent newIntent = new Intent("android.intent.action.VIEW");
         newIntent.setFlags(268435456 | getFlagActivityNoUserAction(InitiatedByUserAction.unknown));
-        newIntent.setClassName("com.android.stk", "com.android.stk.StkInputActivity");
+        newIntent.setClassName("com.android.stk2", "com.android.stk2.StkInputActivity");
         newIntent.putExtra("INPUT", this.mCurrentCmd.geInput());
         this.mContext.startActivity(newIntent);
     }
@@ -1107,7 +1050,7 @@ public class StkAppService extends Service implements Runnable {
                 }
                 cm.setGlobalProxy(new ProxyInfo(gatewayProxy, port, exclusionList));
                 this.mIsProxyChanged = true;
-                MultiSimManager.setTelephonyProperty("gsm.sim.browserEvent", 0, "1");
+                MultiSimManager.setTelephonyProperty("gsm.sim.browserEvent", 1, "1");
             }
             Intent intent = new Intent("android.intent.action.VIEW");
             CatLog.d(this, "settings.url = " + settings.url);
@@ -1157,19 +1100,19 @@ public class StkAppService extends Service implements Runnable {
         for (i = 0; i < numberOfEvents; i++) {
             switch (events[i]) {
                 case 4:
-                    MultiSimManager.setTelephonyProperty("gsm.sim.userEvent", 0, "1");
+                    MultiSimManager.setTelephonyProperty("gsm.sim.userEvent", 1, "1");
                     this.mSetEventList[4] = true;
                     break;
                 case 5:
-                    MultiSimManager.setTelephonyProperty("gsm.sim.screenEvent", 0, "1");
+                    MultiSimManager.setTelephonyProperty("gsm.sim.screenEvent", 1, "1");
                     this.mSetEventList[5] = true;
                     break;
                 case 7:
-                    MultiSimManager.setTelephonyProperty("gsm.sim.lenguageEvent", 0, "1");
+                    MultiSimManager.setTelephonyProperty("gsm.sim.lenguageEvent", 1, "1");
                     this.mSetEventList[7] = true;
                     break;
                 case 8:
-                    MultiSimManager.setTelephonyProperty("gsm.sim.browserEvent", 0, "1");
+                    MultiSimManager.setTelephonyProperty("gsm.sim.browserEvent", 1, "1");
                     this.mSetEventList[8] = true;
                     break;
                 case 9:
@@ -1190,10 +1133,10 @@ public class StkAppService extends Service implements Runnable {
                     for (int j = 0; j < 20; j++) {
                         this.mSetEventList[j] = false;
                     }
-                    MultiSimManager.setTelephonyProperty("gsm.sim.userEvent", 0, "0");
-                    MultiSimManager.setTelephonyProperty("gsm.sim.screenEvent", 0, "0");
-                    MultiSimManager.setTelephonyProperty("gsm.sim.lenguageEvent", 0, "0");
-                    MultiSimManager.setTelephonyProperty("gsm.sim.browserEvent", 0, "0");
+                    MultiSimManager.setTelephonyProperty("gsm.sim.userEvent", 1, "0");
+                    MultiSimManager.setTelephonyProperty("gsm.sim.screenEvent", 1, "0");
+                    MultiSimManager.setTelephonyProperty("gsm.sim.lenguageEvent", 1, "0");
+                    MultiSimManager.setTelephonyProperty("gsm.sim.browserEvent", 1, "0");
                     break;
                 default:
                     break;
@@ -1201,32 +1144,30 @@ public class StkAppService extends Service implements Runnable {
         }
         Bundle args = new Bundle();
         args.putInt("op", 2);
-        if ("SKT".equals("") || "LGT".equals("")) {
-            i = 0;
-            while (i < numberOfEvents) {
-                if (events[i] == 9 || events[i] == 10 || events[i] == 255) {
-                    i++;
+        i = 0;
+        while (i < numberOfEvents) {
+            if (events[i] == 0 || events[i] == 1 || events[i] == 2 || events[i] == 3 || events[i] == 4 || events[i] == 5 || events[i] == 7 || events[i] == 8 || events[i] == 11 || events[i] == 9 || events[i] == 10 || events[i] == 255 || events[i] == 18) {
+                i++;
+            } else {
+                allHandledEvent = false;
+                if (allHandledEvent) {
+                    ResultCode resCode = ResultCode.BEYOND_TERMINAL_CAPABILITY;
+                    args.putInt("response id", 24);
+                    args.putInt("error code", resCode.value());
+                    args.putBoolean("additional info", false);
                 } else {
-                    allHandledEvent = false;
+                    args.putInt("response id", 14);
                 }
-            }
-        } else {
-            i = 0;
-            while (i < numberOfEvents) {
-                if (events[i] == 0 || events[i] == 1 || events[i] == 2 || events[i] == 3 || events[i] == 4 || events[i] == 5 || events[i] == 7 || events[i] == 8 || events[i] == 11 || events[i] == 9 || events[i] == 10 || events[i] == 255 || events[i] == 18) {
-                    i++;
-                } else {
-                    allHandledEvent = false;
-                }
+                startService(new Intent(this, StkAppService.class).putExtras(args));
             }
         }
         if (allHandledEvent) {
-            args.putInt("response id", 14);
-        } else {
-            ResultCode resCode = ResultCode.BEYOND_TERMINAL_CAPABILITY;
+            ResultCode resCode2 = ResultCode.BEYOND_TERMINAL_CAPABILITY;
             args.putInt("response id", 24);
-            args.putInt("error code", resCode.value());
+            args.putInt("error code", resCode2.value());
             args.putBoolean("additional info", false);
+        } else {
+            args.putInt("response id", 14);
         }
         startService(new Intent(this, StkAppService.class).putExtras(args));
     }

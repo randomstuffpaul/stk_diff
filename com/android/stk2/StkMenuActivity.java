@@ -1,4 +1,4 @@
-package com.android.stk;
+package com.android.stk2;
 
 import android.app.ActionBar;
 import android.app.ListActivity;
@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.android.internal.telephony.cat.CatLog;
 import com.android.internal.telephony.cat.Item;
 import com.android.internal.telephony.cat.Menu;
-import com.samsung.android.telephony.MultiSimManager;
 import java.util.ArrayList;
 
 public class StkMenuActivity extends ListActivity {
@@ -38,12 +37,12 @@ public class StkMenuActivity extends ListActivity {
     private BroadcastReceiver mReceiver = null;
     private int mState = 1;
     private Menu mStkMenu = null;
-    Handler mTimeoutHandler = new C00091();
+    Handler mTimeoutHandler = new C00071();
     private ImageView mTitleIconView = null;
     private TextView mTitleTextView = null;
 
-    class C00091 extends Handler {
-        C00091() {
+    class C00071 extends Handler {
+        C00071() {
         }
 
         public void handleMessage(Message msg) {
@@ -58,14 +57,14 @@ public class StkMenuActivity extends ListActivity {
         }
     }
 
-    class C00102 extends BroadcastReceiver {
-        C00102() {
+    class C00082 extends BroadcastReceiver {
+        C00082() {
         }
 
         public void onReceive(Context context, Intent intent) {
             if ("android.intent.action.AIRPLANE_MODE".equals(intent.getAction())) {
                 int airPlaneEnabled = System.getInt(StkMenuActivity.this.mContext.getContentResolver(), "airplane_mode_on", 0);
-                CatLog.d(this, "Received  ACTION_AIRPLANE_MODE_CHANGED = " + airPlaneEnabled);
+                CatLog.d("SIM2", this, "Received  ACTION_AIRPLANE_MODE_CHANGED = " + airPlaneEnabled);
                 if (airPlaneEnabled == 1) {
                     StkMenuActivity.this.finish();
                 }
@@ -75,14 +74,14 @@ public class StkMenuActivity extends ListActivity {
 
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        CatLog.d(this, "onCreate");
+        CatLog.d("SIM2", this, "onCreate");
         setContentView(R.layout.stk_menu_list);
         this.mTitleTextView = (TextView) findViewById(R.id.title_text);
         this.mTitleIconView = (ImageView) findViewById(R.id.title_icon);
         this.mProgressView = (ProgressBar) findViewById(R.id.progress_bar);
         this.mContext = getBaseContext();
-        if (SystemProperties.get("gsm.STK_SETUP_MENU").length() > 0) {
-            setTitle(SystemProperties.get("gsm.STK_SETUP_MENU"));
+        if (SystemProperties.get("gsm.STK_SETUP_MENU2").length() > 0) {
+            setTitle(SystemProperties.get("gsm.STK_SETUP_MENU2"));
         }
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -90,11 +89,7 @@ public class StkMenuActivity extends ListActivity {
             if ("CHU".equals(salesCode)) {
                 actionBar.setDisplayOptions(11);
                 actionBar.setLogo(R.drawable.logo_cu);
-                if (MultiSimManager.getSimSlotCount() == 2) {
-                    actionBar.setTitle(R.string.app_name_cu);
-                } else {
-                    actionBar.setTitle(R.string.app_name_cu_single);
-                }
+                actionBar.setTitle(R.string.app_name_cu);
                 CatLog.d(this, "set cu feature for stk interface ");
             }
         }
@@ -105,9 +100,9 @@ public class StkMenuActivity extends ListActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.intent.action.AIRPLANE_MODE");
         Context context = this.mContext;
-        BroadcastReceiver c00102 = new C00102();
-        this.mReceiver = c00102;
-        context.registerReceiver(c00102, filter);
+        BroadcastReceiver c00082 = new C00082();
+        this.mReceiver = c00082;
+        context.registerReceiver(c00082, filter);
         if (this.appService == null) {
             CatLog.d(this, "appService is null in onCreate()");
             finish();
@@ -119,7 +114,7 @@ public class StkMenuActivity extends ListActivity {
 
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        CatLog.d(this, "onNewIntent");
+        CatLog.d("SIM2", this, "onNewIntent");
         initFromIntent(intent);
         this.mAcceptUsersInput = true;
     }
@@ -132,7 +127,7 @@ public class StkMenuActivity extends ListActivity {
                 return;
             }
             if (this.appService.mMenuItemBlock) {
-                CatLog.d(this, "menu blocked");
+                CatLog.d("SIM2", this, "menu blocked");
                 return;
             }
             cancelTimeOut();
@@ -142,7 +137,7 @@ public class StkMenuActivity extends ListActivity {
             this.mProgressView.setIndeterminate(true);
             return;
         }
-        CatLog.d(this, "!mAcceptUsersInput");
+        CatLog.d("SIM2", this, "!mAcceptUsersInput");
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -150,7 +145,7 @@ public class StkMenuActivity extends ListActivity {
             return true;
         }
         if (this.appService.mMenuItemBlock) {
-            CatLog.d(this, "menu blocked");
+            CatLog.d("SIM2", this, "menu blocked");
             return true;
         }
         switch (keyCode) {
@@ -180,13 +175,13 @@ public class StkMenuActivity extends ListActivity {
             this.appService.indicateMenuVisibility(true);
             this.mStkMenu = this.appService.getMenu();
             if (this.mStkMenu == null) {
-                CatLog.d(this, "onDestroy, mStkMenu is null");
+                CatLog.d("SIM2", this, "onDestroy, mStkMenu is null");
                 finish();
                 return;
             }
             displayMenu();
             if (!this.mAcceptUsersInput || this.appService.mIsMainMenu) {
-                CatLog.d(this, "onResume : It's STK MAIN MENU");
+                CatLog.d("SIM2", this, "onResume : It's STK MAIN MENU");
                 this.mState = 1;
                 this.mAcceptUsersInput = true;
                 this.appService.mIsMainMenu = false;
@@ -256,7 +251,7 @@ public class StkMenuActivity extends ListActivity {
         if (this.mAcceptUsersInput && !this.appService.mMenuItemBlock) {
             return true;
         }
-        CatLog.d(this, "onPrepareOptionsMenu mAcceptUsersInput:" + this.mAcceptUsersInput + ", " + "appService.mMenuItemBlock:" + this.appService.mMenuItemBlock);
+        CatLog.d("SIM2", this, "onPrepareOptionsMenu mAcceptUsersInput:" + this.mAcceptUsersInput + ", " + "appService.mMenuItemBlock:" + this.appService.mMenuItemBlock);
         return false;
     }
 
@@ -265,7 +260,7 @@ public class StkMenuActivity extends ListActivity {
             return true;
         }
         if (this.appService.mMenuItemBlock) {
-            CatLog.d(this, "menu blocked");
+            CatLog.d("SIM2", this, "menu blocked");
             return true;
         }
         switch (item.getItemId()) {
@@ -290,14 +285,14 @@ public class StkMenuActivity extends ListActivity {
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
         if (this.mStkMenu != null) {
-            CatLog.d(this, "onCreateContextMenu helpAvailable = " + this.mStkMenu.helpAvailable);
+            CatLog.d("SIM2", this, "onCreateContextMenu helpAvailable = " + this.mStkMenu.helpAvailable);
             if (this.mStkMenu.helpAvailable) {
                 menu.add(0, 3, 0, R.string.help);
                 return;
             }
             return;
         }
-        CatLog.d(this, "onCreateContextMenu, mStkMenu is null");
+        CatLog.d("SIM2", this, "onCreateContextMenu, mStkMenu is null");
     }
 
     public boolean onContextItemSelected(MenuItem item) {
@@ -305,7 +300,7 @@ public class StkMenuActivity extends ListActivity {
             return true;
         }
         if (this.appService.mMenuItemBlock) {
-            CatLog.d(this, "menu blocked");
+            CatLog.d("SIM2", this, "menu blocked");
             return true;
         }
         switch (item.getItemId()) {
@@ -320,7 +315,7 @@ public class StkMenuActivity extends ListActivity {
                         return true;
                     }
                 } catch (ClassCastException e) {
-                    CatLog.d(this, "bad menuInfo");
+                    CatLog.d("SIM2", this, "bad menuInfo");
                     break;
                 }
                 break;
@@ -339,13 +334,7 @@ public class StkMenuActivity extends ListActivity {
     }
 
     private boolean isSimDisabled() {
-        int mStatus = System.getInt(this.mContext.getContentResolver(), "phone1_on", 1);
-        CatLog.d(this, "isSimDisabled PHONE1_ON mStatus = " + mStatus);
-        if ("CTC".equals(SystemProperties.get("ro.csc.sales_code", ""))) {
-            mStatus = System.getInt(this.mContext.getContentResolver(), "phone2_on", 1);
-            CatLog.d(this, "isSimDisabled PHONE2_ON mStatus = " + mStatus);
-        }
-        if (mStatus == 0) {
+        if (System.getInt(this.mContext.getContentResolver(), "phone2_on", 1) == 0) {
             return true;
         }
         return false;
@@ -382,7 +371,7 @@ public class StkMenuActivity extends ListActivity {
                     timeOut = 60000;
                 }
             }
-            CatLog.d(this, "startTimeOut for => " + timeOut);
+            CatLog.d("SIM2", this, "startTimeOut for => " + timeOut);
             cancelTimeOut();
             this.mTimeoutHandler.sendMessageDelayed(this.mTimeoutHandler.obtainMessage(1), (long) timeOut);
         }
@@ -405,11 +394,7 @@ public class StkMenuActivity extends ListActivity {
             this.mTitleTextView.setVisibility(0);
             salesCode = SystemProperties.get("ro.csc.sales_code");
             if ("CHU".equals(salesCode)) {
-                if (MultiSimManager.getSimSlotCount() == 2) {
-                    this.mTitleTextView.setText(R.string.app_name_cu);
-                } else {
-                    this.mTitleTextView.setText(R.string.app_name_cu_single);
-                }
+                this.mTitleTextView.setText(R.string.app_name_cu);
             } else if (this.mStkMenu.title == null) {
                 this.mTitleTextView.setText(R.string.app_name);
             } else {
@@ -428,7 +413,7 @@ public class StkMenuActivity extends ListActivity {
             finish();
         }
         if (this.mState == 3) {
-            CatLog.d(this, "get end intent");
+            CatLog.d("SIM2", this, "get end intent");
             finish();
         }
     }
@@ -441,10 +426,10 @@ public class StkMenuActivity extends ListActivity {
         try {
             return (Item) this.mStkMenu.items.get(position);
         } catch (IndexOutOfBoundsException e) {
-            CatLog.d(this, "Invalid menu");
+            CatLog.d("SIM2", this, "Invalid menu");
             return item;
         } catch (NullPointerException e2) {
-            CatLog.d(this, "Invalid menu");
+            CatLog.d("SIM2", this, "Invalid menu");
             return item;
         }
     }

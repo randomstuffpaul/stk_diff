@@ -1,4 +1,4 @@
-package com.android.stk;
+package com.android.stk2;
 
 import android.text.method.NumberKeyListener;
 

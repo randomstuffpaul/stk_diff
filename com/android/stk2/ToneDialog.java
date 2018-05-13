@@ -1,4 +1,4 @@
-package com.android.stk;
+package com.android.stk2;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,14 +16,14 @@ import com.android.internal.telephony.cat.ToneSettings;
 public class ToneDialog extends Activity {
     StkAppService appService = StkAppService.getInstance();
     boolean mSentTerminalResponse;
-    Handler mToneStopper = new C00111();
+    Handler mToneStopper = new C00091();
     Vibrator mVibrator = null;
     TonePlayer player = null;
     ToneSettings settings = null;
     TextMessage toneMsg = null;
 
-    class C00111 extends Handler {
-        C00111() {
+    class C00091 extends Handler {
+        C00091() {
         }
 
         public void handleMessage(Message msg) {
@@ -40,8 +40,8 @@ public class ToneDialog extends Activity {
         }
     }
 
-    class C00122 implements Runnable {
-        C00122() {
+    class C00102 implements Runnable {
+        C00102() {
         }
 
         public void run() {
@@ -55,7 +55,7 @@ public class ToneDialog extends Activity {
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         initFromIntent(getIntent());
-        new Thread(new C00122()).start();
+        new Thread(new C00102()).start();
         findViewById(16908310).setVisibility(8);
         setContentView(R.layout.stk_tone_dialog);
         ImageView iv = (ImageView) findViewById(R.id.icon);
@@ -89,12 +89,12 @@ public class ToneDialog extends Activity {
     }
 
     public void onStop() {
-        CatLog.d(this, "onStop");
+        CatLog.d("SIM2", this, "onStop");
         super.onStop();
         this.appService.lock.lock();
         try {
             if (this.appService.mWakeLock.isHeld()) {
-                CatLog.d(this, "before release wakeup");
+                CatLog.d("SIM2", this, "before release wakeup");
                 this.appService.mWakeLock.release();
             }
             this.appService.lock.unlock();
@@ -105,17 +105,17 @@ public class ToneDialog extends Activity {
     }
 
     public void onResume() {
-        CatLog.d(this, "onResume");
+        CatLog.d("SIM2", this, "onResume");
         super.onResume();
     }
 
     public void onPause() {
-        CatLog.d(this, "onPause");
+        CatLog.d("SIM2", this, "onPause");
         super.onPause();
     }
 
     protected void onDestroy() {
-        CatLog.d(this, "onDestroy");
+        CatLog.d("SIM2", this, "onDestroy");
         if (!this.mSentTerminalResponse) {
             sendResponse(14);
         }

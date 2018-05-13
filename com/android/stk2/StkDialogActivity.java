@@ -1,4 +1,4 @@
-package com.android.stk;
+package com.android.stk2;
 
 import android.app.Activity;
 import android.app.AlertDialog.Builder;
@@ -25,12 +25,12 @@ public class StkDialogActivity extends Activity implements OnClickListener, OnKe
     private Context mContext;
     boolean mPauseRelease;
     boolean mSentTerminalResponse;
-    private final BroadcastReceiver mStateReceiver = new C00062();
+    private final BroadcastReceiver mStateReceiver = new C00042();
     TextMessage mTextMsg;
-    Handler mTimeoutHandler = new C00051();
+    Handler mTimeoutHandler = new C00031();
 
-    class C00051 extends Handler {
-        C00051() {
+    class C00031 extends Handler {
+        C00031() {
         }
 
         public void handleMessage(Message msg) {
@@ -44,7 +44,7 @@ public class StkDialogActivity extends Activity implements OnClickListener, OnKe
                     StkDialogActivity.this.finish();
                     return;
                 case 2:
-                    CatLog.d(this, "MSG_ID_PAUSE_TIMEOUT!!!!! ");
+                    CatLog.d("SIM2", this, "MSG_ID_PAUSE_TIMEOUT!!!!! ");
                     StkDialogActivity.this.mPauseRelease = false;
                     return;
                 default:
@@ -53,14 +53,14 @@ public class StkDialogActivity extends Activity implements OnClickListener, OnKe
         }
     }
 
-    class C00062 extends BroadcastReceiver {
-        C00062() {
+    class C00042 extends BroadcastReceiver {
+        C00042() {
         }
 
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("com.android.samsungtest.EVENTHANDLE_BUTTON")) {
                 String inputString = "";
-                CatLog.d(this, "got intent");
+                CatLog.d("SIM2", this, "got intent");
                 int button = intent.getIntExtra("Button", -1);
                 if (button == 0) {
                     StkDialogActivity.this.sendResponse(21);
@@ -74,7 +74,7 @@ public class StkDialogActivity extends Activity implements OnClickListener, OnKe
                 }
             } else if ("android.intent.action.AIRPLANE_MODE".equals(intent.getAction())) {
                 int airPlaneEnabled = System.getInt(StkDialogActivity.this.mContext.getContentResolver(), "airplane_mode_on", 0);
-                CatLog.d(this, "Received  ACTION_AIRPLANE_MODE_CHANGED = " + airPlaneEnabled);
+                CatLog.d("SIM2", this, "Received  ACTION_AIRPLANE_MODE_CHANGED = " + airPlaneEnabled);
                 if (airPlaneEnabled == 1) {
                     StkDialogActivity.this.finish();
                 }
@@ -133,32 +133,30 @@ public class StkDialogActivity extends Activity implements OnClickListener, OnKe
     }
 
     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-        CatLog.d(this, "onKeyDown : " + keyCode + "Action :" + event.getAction());
-        if (event.getAction() == 0) {
-            switch (keyCode) {
-                case 4:
-                    sendResponse(21);
-                    finish();
-                    break;
-            }
+        CatLog.d("SIM2", this, "onKeyDown : " + keyCode);
+        switch (keyCode) {
+            case 4:
+                sendResponse(21);
+                finish();
+                break;
         }
         return false;
     }
 
     public void onResume() {
-        CatLog.d(this, "onResume startTimeOut");
+        CatLog.d("SIM2", this, "onResume startTimeOut");
         super.onResume();
         startTimeOut();
     }
 
     public void onPause() {
-        CatLog.d(this, "onPause time out cancel");
+        CatLog.d("SIM2", this, "onPause time out cancel");
         super.onPause();
         if (!this.mPauseRelease || this.mSentTerminalResponse) {
             this.appService.lock.lock();
             try {
                 if (this.appService.mWakeLock.isHeld()) {
-                    CatLog.d(this, "before release wakeup");
+                    CatLog.d("SIM2", this, "before release wakeup");
                     this.appService.mWakeLock.release();
                 }
                 this.appService.lock.unlock();
@@ -188,7 +186,7 @@ public class StkDialogActivity extends Activity implements OnClickListener, OnKe
     }
 
     public void onStop() {
-        CatLog.d(this, "onStop finish dialog and send TR as END SESSION");
+        CatLog.d("SIM2", this, "onStop finish dialog and send TR as END SESSION");
         super.onStop();
     }
 
@@ -199,7 +197,7 @@ public class StkDialogActivity extends Activity implements OnClickListener, OnKe
 
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        CatLog.d(this, "onConfigurationChanged");
+        CatLog.d("SIM2", this, "onConfigurationChanged");
     }
 
     public void onSaveInstanceState(Bundle outState) {
@@ -240,7 +238,7 @@ public class StkDialogActivity extends Activity implements OnClickListener, OnKe
     private void startTimeOut() {
         cancelTimeOut();
         int dialogDuration = StkApp.calculateDurationInMilis(this.mTextMsg.duration);
-        CatLog.d(this, "raw data dialogDuration = " + dialogDuration);
+        CatLog.d("SIM2", this, "raw data dialogDuration = " + dialogDuration);
         if (dialogDuration == 0) {
             if (this.mTextMsg.userClear) {
                 dialogDuration = 40000;
@@ -248,7 +246,7 @@ public class StkDialogActivity extends Activity implements OnClickListener, OnKe
                 dialogDuration = 5000;
             }
         }
-        CatLog.d(this, "final dialogDuration = " + dialogDuration);
+        CatLog.d("SIM2", this, "final dialogDuration = " + dialogDuration);
         this.mTimeoutHandler.sendMessageDelayed(this.mTimeoutHandler.obtainMessage(1), (long) dialogDuration);
     }
 

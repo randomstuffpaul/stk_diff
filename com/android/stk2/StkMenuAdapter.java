@@ -1,4 +1,4 @@
-package com.android.stk;
+package com.android.stk2;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -38,9 +38,9 @@ public class StkMenuAdapter extends ArrayAdapter<Item> {
                 imageView.setVisibility(0);
             }
         } catch (IndexOutOfBoundsException e) {
-            CatLog.d(this, "Invalid menu");
+            CatLog.d("SIM2", this, "Invalid menu");
         } catch (NullPointerException e2) {
-            CatLog.d(this, "Invalid menu");
+            CatLog.d("SIM2", this, "Invalid menu");
         }
         return convertView;
     }

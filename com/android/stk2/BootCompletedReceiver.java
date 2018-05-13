@@ -1,4 +1,4 @@
-package com.android.stk;
+package com.android.stk2;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,7 +11,7 @@ public class BootCompletedReceiver extends BroadcastReceiver {
         if (intent != null) {
             String action = intent.getAction();
             if (action != null) {
-                Log.e("STK", "onReceive " + action);
+                Log.e("STK2", "onReceive " + action);
                 if (action.equals("android.intent.action.BOOT_COMPLETED")) {
                     Bundle args = new Bundle();
                     args.putInt("op", 5);
